@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+    {% block  head %}
+    {% endblock %}
+
+    <style type="text/css">
+    * {
+    padding:0;
+    margin: 0;
+    }
+
+    html, body {
+    width: 100%;
+    background-color: #222;
+    }
+
+    #header {
+    background-color: #333;
+    padding: 10px 10%;
+    }
+
+    #header a {
+    text-decoration: none;
+    color: white;
+    }
+
+    #header a:hover {
+    color: #DDD;
+    }
+    /* 导航栏按钮 */
+    .btn {
+    display: none;
+    float:right;
+    margin-top: 5px;
+    border: 0;
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    }
+    /* 文字Logo */
+    #header a.logo {
+    float:left;
+    font-weight: bold;
+    font-size: 39px;
+    line-height: 50px;
+    }
+
+    #header div.nav {
+    height: 50px;
+    }
+
+    #header ul.nav-bar {
+    list-style: none;
+    float: right;
+    line-height: 50px;
+    }
+    #header ul.nav-bar li {
+    float:left;
+    padding: 0 10px;
+    }
+
+    @media screen and (max-width: 768px){
+    #header {
+        padding: 10px 5%;
+        height: 50px;
+        overflow: hidden;
+    }
+    #header a.logo {
+        line-height: 55px;
+        font-size: 30px;
+    }
+    .btn {
+        display: block;
+    }
+    #header ul.nav-bar {
+        margin-top: 15px;
+        border-top: solid 1px #111;
+        width:100%;
+    }
+    #header ul.nav-bar li {
+        float: none;
+        padding: 0 10px;
+    }
+    }
+
+    #container {
+    width: 100%;
+    background:#222;
+    }
+
+    tr:nth-child(odd)  td  {
+        background-color:#444;
+    }
+
+    tr:nth-child(even)  td{
+        background-color:#222;
+    }
+    </style>
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/register.css">
+</head>
+<body>
+
+<div id="header">
+    <div class="nav">
+        <a href="/" class="logo">English</a>
+        <div id="nav-btn" class="btn" style="color: #777777">
+            开
+        </div>
+        <ul class="nav-bar">
+            <li><a href="/user/info">个人资料</a></li>
+            <li><a href="/word/userLearned/1">我的已学</a></li>
+            <li><a href="/register">注册</a></li>
+            <li><a href="/login">登录</a></li>
+            <li><a href="/logout">退出</a></li>
+        </ul>
+    </div>
+</div>
+
+<div id="container">
+{% block content %}
+{%  endblock %}
+</div>
+
+</body>
+<script type="text/javascript">
+        // 开关状态
+    var open = false;
+    $('#nav-btn').click(function (){
+                // 按钮状态
+        $(this).css("background-color", open ? '#333' : '#222');
+        var navBar = $('.nav-bar');
+                // 设置header的高度，将导航列表显示出来
+        var height = navBar.offset().top + navBar.height();
+        $('#header').animate({
+            height: open ? 50 : height
+        });
+                // 修改开关状态
+        open = !open;
+    });
+
+</script>
+{% block js %}
+{% endblock %}
+</html>

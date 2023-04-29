@@ -1,0 +1,20 @@
+# Local configure files
+*.yaml
+
+# Python binary files
+*.py[co]
+
+# Editors
+.idea
+*.swp
+
+
+# Test files
+test
+
+# Py Installer build files
+dist
+
+venv/*
+
+

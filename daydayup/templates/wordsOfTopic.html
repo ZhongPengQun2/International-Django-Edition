@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div style="font-size:200%; color:#aaa" align="center">
+&nbsp;&nbsp;&nbsp;
+<a href='/word/wordsOfTopic/1/?page_size=10000000&download_audio=1'>Download audio</a>
+<table id="words_table" class="display"  width="80%" border="2">
+    {% for word in words %}
+        <tr>
+            <td>{{ word.spell }}</td>
+            <td>{{ word.speak }}</td>
+            <td>{{ word.soramimi }}</td>
+            <td>{{ word.short_meaning }}</td>
+            <td>{{ word.meaning }}</td>
+        </tr>
+    {% endfor %}
+</table>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() {
+$("#words_table").table2excel({
+    exclude: ".excludeThisClass",
+    name: "Worksheet Name",
+    filename: "SomeFile.xls", // do include extension
+    preserveColors: false // set to true if you want background colors and font colors preserved
+});
+})
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="font-size:200%; color:#aaa" align="center">
+&nbsp;&nbsp;&nbsp;
+<table width="80%" border="2">
+    {% for topic in topics %}
+        <tr>
+            <td><a href="/word/wordsOfTopic/{{ topic.id }}?page_size=10000000">{{ topic.name }}</a></td>
+        </tr>
+    {% endfor %}
+</table>
+</div>
+{% endblock %}

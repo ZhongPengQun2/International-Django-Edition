@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<a href="/word/export/words">for editor</a>
+<div style="font-size:200%; color:#aaa" align="center">
+&nbsp;&nbsp;&nbsp;
+<table width="80%" border="2">
+    <tr>
+        <td colspan="3">
+            {% for page_num in page_nums %}
+                <a onclick="clickPageNum(this)" {% if  page == i %} style="color: #88afff" {% endif %}>{{ i }}</a>
+            {% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3"> 总数: {{ total }}</td>
+    </tr>
+{% for word in word_list %}
+<td>{{ word.spell }}</td>
+<td>{{ word.soramimi or '' }}</td>
+    <td>
+        {% if word.learned != True%}
+            <a onclick="passThisWord({{ word.id }}, this)" title="已知道该单词">√</a>
+        {% endif %}
+            <a onclick="collectThisWord({{ word.id }}, this)" title="收藏">★</a>
+    </td>
+</tr>
+
+<td>
+<audio id="playMusic_{{ word.id }}" preload="load" src="/static/audio/{{ word.id }}.mp3"></audio>
+[&nbsp;{{ word.pronunciation }}&nbsp;]
+<img width="20" height="20" class="musicPlay" id="{{ word.id }}" src="http://qnm.hunliji.com/o_1a7rf4al1f6kbn3i26fnqvqd36.png">
+</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr >
+<td>{{ word.meaning }}</td>
+<td>&nbsp;</td>
+<td></td>
+</tr>
+
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+{% endfor %}
+<tr>
+    <td colspan="3">
+        {% for i in page_nums %}
+            <a onclick="clickPageNum(this)" {% if page == i %} style="color: #88afff" {% endif %} >{{ i }}</a>
+        {% endfor %}
+    </td>
+</tr>
+</table>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(function(){
+  $(document).on('click','.musicPlay',function(){
+    mid = $(this).attr("id")
+  //  alert(mid);
+ //   mid = mid.replace(/,/, "")
+	document.querySelector('#playMusic_' + mid).play();
+  })
+})
+</script>
+
+<script>
+function passThisWord(word_id, thx) {
+    $.ajax({
+        type: "GET",
+        url: "/user/passThisWord",
+        data: {word_id: word_id},
+        dataType: "json",
+        success: function(data){
+//            alert(data.error);
+            if (data.error == 0){
+                $(thx).hide();
+            };
+        }
+    });
+}
+
+function collectThisWord(word_id, thx) {
+    $.ajax({
+        type: "GET",
+        url: "/user/collectThisWord",
+        data: {word_id: word_id},
+        dataType: "json",
+        success: function(data){
+//            alert(data.error);
+            if (data.error == 0){
+                $(thx).hide();
+            };
+        }
+    });
+}
+</script>
+
+<script>
+function clickPageNum(thx) {
+    // xx = document.location.href;
+    document.location = document.location.href.replace(/page={{ page }}/, "page=" + thx.innerText);
+    // alert(yy);
+    // alert(thx.innerText);
+}
+</script>
+{% endblock %}

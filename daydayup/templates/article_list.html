@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="font-size:200%; color:#aaa" align="center">
+&nbsp;&nbsp;&nbsp;
+<table width="80%" border="2">
+    {% for a in articles %}
+        <tr>
+            <td><a href="/article/detail/{{ a.id }}">{{ a.title }}</a></td>
+        </tr>
+    {% endfor %}
+</table>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(function(){
+  $(document).on('click','.musicPlay',function(){
+    mid = $(this).attr("id")
+  //  alert(mid);
+ //   mid = mid.replace(/,/, "")
+	document.querySelector('#playMusic_' + mid).play();
+  })
+})
+</script>
+
+<script>
+function passThisWord(word_id, thx) {
+    $.ajax({
+        type: "GET",
+        url: "/user/passThisWord",
+        data: {word_id: word_id},
+        dataType: "json",
+        success: function(data){
+            alert(data.error);
+            if (data.error == 0){
+                $(thx).hide();
+            };
+        }
+    });
+}
+</script>
+{% endblock %}

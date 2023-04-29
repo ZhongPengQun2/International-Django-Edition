@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="font-size:200%; color:#aaa" align="center">
+&nbsp;&nbsp;&nbsp;
+<table width="80%" border="2">
+        <tr>
+        <td>
+            {% for page_count in page_counts %}
+                <a href="/word/userCollected/{{ page_count }}/" {% if  page_num == page_count %} style="color: #88afff" {% endif %} >{{ page_count }}</a>
+            {% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <td> 总数: {{ total }}</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
+{% for word in word_list %}
+<tr>
+<td>{{ word.spell }}</td>
+</tr>
+
+<tr>
+<td>
+<audio id="playMusic_{{ word.id }}" preload="load" src="/static/audio/{{ word.id }}.mp3"></audio>
+&nbsp;[&nbsp;{{ word.pronunciation }}&nbsp;]
+<img width="20" height="20" class="musicPlay" id="{{ word.id }}" src="http://qnm.hunliji.com/o_1a7rf4al1f6kbn3i26fnqvqd36.png">
+</td>
+</tr>
+
+<tr>
+<td>{{ word.meaning }}</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+</tr>
+{% endfor %}
+</table>
+&nbsp;&nbsp;
+&nbsp;&nbsp;
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(function(){
+  $(document).on('click','.musicPlay',function(){
+    mid = $(this).attr("id");
+	document.querySelector('#playMusic_' + mid).play();
+  })
+})
+</script>
+
+<script>
+function passThisWord(word_id, thx) {
+    $.ajax({
+        type: "GET",
+        url: "/user/passThisWord",
+        data: {word_id: word_id},
+        dataType: "json",
+        success: function(data){
+            alert(data.error);
+            if (data.error == 0){
+                $(thx).hide();
+            };
+        }
+    });
+}
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

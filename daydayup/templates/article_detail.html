@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div style="font-size:200%; color:#aaa" align="center">
+{% if article.video_embed_link %}
+<embed src="{{ article.video_embed_link }}" width="600px" height="400px"></embed>
+{% endif %}
+&nbsp;
+<button onclick="Export2Word('article_content');">Export as .doc</button>
+<table width="80%" border="2" id="article_content">
+<tr>
+    <td align="center">{{ article.title }}</td>
+</tr>
+
+    <tr>
+        <td id="article_content">{{ article.content|safe }}</td>
+    </tr>
+</table>
+
+&nbsp;&nbsp;&nbsp;
+
+<table width="80%" border="2">
+<tr>
+    <td colspan="8" align="center">未知单词出现的次数</td>
+</tr>
+{% for item in words %}
+<tr>
+    <td align="left">{{ item[0] }}</td>
+    <td align="left">{{ item[6] }}</td>
+    <td>
+<button onclick="clickA('{{ item[0] }}')">播放/暂停</button>
+<audio crossOrigin="anonymous" id="audio_{{ item[0] }}" src="/word/sound?word={{ item[0] }}">你的浏览器不支持</audio>
+    </td>
+    <td align="center">{{ item[1] }}</td>
+    <td>{% if not item[3] %}<a onclick="passThisWord('{{ item[0] }}', this)">pass</a>{% endif %}</td>
+    <td>{% if not item[4] %}<a onclick="collectThisWord('{{ item[0] }}', this)">collect</a>{% endif %}</td>
+    <td>{% if not item[5] %}<a onclick="tagThisWordAsCurrentTopic('{{ item[0] }}', this)">current topic</a>{% endif %}</td>
+    <td>{% if item[2] %} {{ item[2] }} <br><input><button onclick="soramimiThisWord('{{ item[0] }}', this)">soramimi</button>{% else %}<input><button onclick="soramimiThisWord('{{ item[0] }}', this)">soramimi</button>{% endif %}</td>
+</tr>
+{% endfor %}
+
+</table>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+function tagThisWordAsCurrentTopic(word_spell, thx) {
+    $.ajax({
+        type: "GET",
+        url: "/user/tagThisWordAsCurrentTopic",
+        data: {word_spell: word_spell},
+        dataType: "json",
+        success: function(data){
+            if (data.error == 0){
+                $(thx).hide();
+            };
+        }
+    });
+}
+
+function passThisWord(word_spell, thx) {
+    $.ajax({
+        type: "GET",
+        url: "/user/passThisWord",
+        data: {word_spell: word_spell},
+        dataType: "json",
+        success: function(data){
+            if (data.error == 0){
+                $(thx).hide();
+            };
+        }
+    });
+}
+
+function collectThisWord(word_spell, thx) {
+    $.ajax({
+        type: "GET",
+        url: "/user/collectThisWord",
+        data: {word_spell: word_spell},
+        dataType: "json",
+        success: function(data){
+            if (data.error == 0){
+                $(thx).hide();
+            };
+        }
+    });
+}
+
+function soramimiThisWord(word_spell, thx) {
+    soramimi = $(thx).parent().find('input')[0].value;
+    $.ajax({
+        type: "GET",
+        url: "/user/soramimiThisWord",
+        data: {word_spell: word_spell, soramimi: soramimi},
+        dataType: "json",
+        success: function(data){
+            if (data.error == 0){
+                $(thx).hide();
+            };
+        }
+    });
+}
+
+
+function clickA(spell){
+	var a=document.getElementById("audio_" + spell);
+        if(a.paused){
+
+            a.play();
+
+        }else{
+
+            a.pause();
+
+        }
+
+    }
+
+function Export2Word(element, filename = ''){
+    var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+    var postHtml = "</body></html>";
+    var html = preHtml+document.getElementById(element).innerHTML+postHtml;
+
+    var blob = new Blob(['\ufeff', html], {
+        type: 'application/msword'
+    });
+    
+    // Specify link url
+    var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+    
+    // Specify file name
+    filename = filename?filename+'.doc':'document.doc';
+    
+    // Create download link element
+    var downloadLink = document.createElement("a");
+
+    document.body.appendChild(downloadLink);
+    
+    if(navigator.msSaveOrOpenBlob ){
+        navigator.msSaveOrOpenBlob(blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = url;
+        
+        // Setting the file name
+        downloadLink.download = filename;
+        
+        //triggering the function
+        downloadLink.click();
+    }
+    
+    document.body.removeChild(downloadLink);
+}
+
+
+</script>
+{% endblock %}

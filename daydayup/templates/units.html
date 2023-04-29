@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="font-size:200%; color:#aaa" align="center">
+&nbsp;&nbsp;&nbsp;
+<table width="80%" border="2">
+<tr>
+    <td>名称</td>
+    <td>单词数</td>
+    <td>未知数</td>
+</tr>
+{% for unit in result %}
+<tr>
+<td><a href="/word/{{ unit.name }}/?page=1">{{ unit.name }}</a></td>
+<td>{{ unit.total }}</td>
+<td><a href="/word/{{ unit.name }}/?page=1&unLearned=1"> {{ unit.total - unit.learned_count}} </a></td>
+</tr>
+{% endfor %}
+</table>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
